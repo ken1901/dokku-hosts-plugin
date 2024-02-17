@@ -71,7 +71,7 @@ case "$1" in
     info "Hosts set for $APP"
 
     for CONTAINER in $(docker ps -a|grep "$APP"|awk '{print $1}'); do
-      docker exec "$CONTAINER" sh -c "grep '# hosts-plugin' etc/hosts"|awk '{ print $1, $2 }'
+      docker exec "$CONTAINER" sh -c "grep '# hosts-plugin' /etc/hosts"|awk '{ print $1, $2 }'
       break
     done  
     ;;
@@ -89,7 +89,7 @@ case "$1" in
     for CONTAINER in $(docker ps -a|grep "$APP"|awk '{print $1}'); do
       ENTRY="$IP $HOSTNAME"
       if ! docker exec "$CONTAINER" cat etc/hosts|grep -q "$ENTRY"; then
-        docker exec "$CONTAINER" sh -c "echo '$ENTRY  # hosts-plugin' >> etc/hosts"
+        docker exec "$CONTAINER" sh -c "echo '$ENTRY  # hosts-plugin' >> /etc/hosts"
       fi
     done
     init_vars
