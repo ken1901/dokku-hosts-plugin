@@ -88,7 +88,7 @@ case "$1" in
 
     for CONTAINER in $(docker ps -a|grep "$APP"|awk '{print $1}'); do
       ENTRY="$IP $HOSTNAME"
-      if ! docker exec "$CONTAINER" cat etc/hosts|grep -q "$ENTRY"; then
+      if ! docker exec "$CONTAINER" cat /etc/hosts|grep -q "$ENTRY"; then
         docker exec "$CONTAINER" sh -c "echo '$ENTRY  # hosts-plugin' >> /etc/hosts"
       fi
     done
@@ -107,9 +107,9 @@ case "$1" in
 
     TMP_HOSTS=$(mktemp)
     for CONTAINER in $(docker ps -a|grep "$APP"|awk '{print $1}'); do
-      docker exec "$CONTAINER" sh -c "cat etc/hosts" > "$TMP_HOSTS"
+      docker exec "$CONTAINER" sh -c "cat /etc/hosts" > "$TMP_HOSTS"
       sed -i "/$HOSTNAME.*hosts-plugin/d" "$TMP_HOSTS"
-      docker exec -i "$CONTAINER" sh -c "cat > etc/hosts" < "$TMP_HOSTS"
+      docker exec -i "$CONTAINER" sh -c "cat > /etc/hosts" < "$TMP_HOSTS"
     done
     rm "$TMP_HOSTS"
     init_vars
@@ -126,9 +126,9 @@ case "$1" in
 
     TMP_HOSTS=$(mktemp)
     for CONTAINER in $(docker ps -a|grep "$APP"|awk '{print $1}'); do
-      docker exec "$CONTAINER" sh -c "cat etc/hosts" > "$TMP_HOSTS"
+      docker exec "$CONTAINER" sh -c "cat /etc/hosts" > "$TMP_HOSTS"
       sed -i '/hosts-plugin/d' "$TMP_HOSTS"
-      docker exec -i "$CONTAINER" sh -c "cat > etc/hosts" < "$TMP_HOSTS"
+      docker exec -i "$CONTAINER" sh -c "cat > /etc/hosts" < "$TMP_HOSTS"
     done
     rm "$TMP_HOSTS"
     init_vars
