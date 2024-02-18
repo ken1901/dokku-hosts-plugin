@@ -40,9 +40,10 @@ function save_hosts() {
 function load_hosts() {
   local app_path="$HOSTS_DIR/$APP"
   if [ -d $app_path ]; then
-    for HOSTNAME in $app_path/*; do
-      local ip=$(cat "$HOSTNAME")
-      dokku hosts:add $APP $ip $HOSTNAME
+    for HOSTPATH in $app_path/*; do
+      local ip=$(cat "$HOSTPATH")
+      HOSTNAME=$(basename -- "$HOSTPATH")
+      dokku hosts:add $APP $ip "$HOSTNAME"
     done
   fi
 }
